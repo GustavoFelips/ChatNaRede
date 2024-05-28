@@ -3,8 +3,8 @@ import threading
 
 HEADER = 64
 PORT = 5050
-#SERVER = "10.1.13.92" #Meu ip para ficar como servidor
-#Another way to get the local IP address automatically
+# SERVER = "10.1.13.92" #Meu ip para ficar como servidor
+# Another way to get the local IP address automatically
 SERVER = socket.gethostbyname(socket.gethostname())
 print(SERVER)
 print(socket.gethostname())
@@ -14,11 +14,11 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
-clients = []
+clients = {}
 
 
 def handle_client(conn, addr):
-    clients.append(conn)
+    clients[conn] = addr
     print(f"[NEW CONNECTION] {addr} connected.")
     connected = True
     while connected:
@@ -29,8 +29,11 @@ def handle_client(conn, addr):
             if msg == DISCONNECT_MESSAGE:
                 connected = False
             print(f"[{addr}] {msg}")
-            for client in clients:
-                client.send(f"[{addr}] {msg}".encode(FORMAT))
+            for client, ip in clients.items():
+                if ip == addr:
+                    pass
+                else:
+                    client.send(f"[{addr}] {msg}".encode(FORMAT))
     conn.close()
 
 
