@@ -19,7 +19,8 @@ def handle_client():
     print(client.recv(2048).decode(FORMAT))
 
 
-def send(msg):
+def send():
+    msg = input()
     message = msg.encode(FORMAT)
     msg_length = len(message)
     send_length = str(msg_length).encode(FORMAT)
@@ -29,10 +30,7 @@ def send(msg):
 
 
 while True:
-    mensagem = input()
-    send(mensagem)
+    threadMsg = threading.Thread(target=send)
+    threadMsg.start()
     thread = threading.Thread(target=handle_client)
     thread.start()
-    if mensagem == '0': break
-
-send(DISCONNECT_MESSAGE)
